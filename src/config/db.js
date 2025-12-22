@@ -1,0 +1,57 @@
+const mysql = require("mysql2/promise");
+require("dotenv").config();
+
+const connectDB = async () => {
+  try {
+    // 1️⃣ Connect to MySQL server
+    const db = await mysql.createConnection({
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT || 3306,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+
+      // ✅ Fix for AWS RDS self-signed cert
+      ssl: {
+        rejectUnauthorized: false
+      }
+    });
+
+    console.log("✅ MySQL connected");
+
+    // 2️⃣ Create database if not exists
+    const DB_NAME = process.env.DB_NAME || "educationdb";
+    await db.query(`CREATE DATABASE IF NOT EXISTS ${DB_NAME}`);
+    await db.query(`USE ${DB_NAME}`);
+
+    console.log(`✅ Using database: ${DB_NAME}`);
+
+    // 3️⃣ USERS TABLE (Auth only)
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(100) NOT NULL,
+        phone VARCHAR(15) UNIQUE NOT NULL,
+        email VARCHAR(100),
+        password VARCHAR(255) NOT NULL,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+// Debug: Log number of rows and columns in users table
+    const [rows, fields] = await db.query("SELECT * FROM users");
+  console.log("📋 Total number:", rows.length);
+  console.log("📋 Columns:");
+  fields.forEach((field) => {
+    console.log("-", field.name);
+  });
+
+    console.log("✅ Users table created / verified");
+
+    return db;
+  } catch (error) {
+    console.error("❌ DB connection failed:", error.message);
+    process.exit(1);
+  }
+};
+
+module.exports = connectDB;
