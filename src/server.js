@@ -5,6 +5,8 @@ const cors = require("cors");
 
 const connectDB = require("./config/db");
 const authRoutes = require("././routes/Auth/auth.routes");
+const uploadRoutes = require("./routes/uploadRoutes/uploadRoutes");
+const schoolRoutes = require("./routes/School/schoolRoutes");
 
 
 const port = process.env.PORT || 5000;
@@ -15,8 +17,17 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// Routes Auth
 app.use("/api/auth", authRoutes);
+// Routes Upload
+app.use("/api", uploadRoutes);
+// Routes Schools
+app.use("/api/schools", schoolRoutes);
+
+
+
+
+
 
 // Health check
 app.get("/", (req, res) => {

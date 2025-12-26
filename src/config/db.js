@@ -37,8 +37,37 @@ const connectDB = async () => {
       )
     `);
 
+
+// 4️⃣ SCHOOLS TABLE
+
+
+await db.query(`
+  CREATE TABLE IF NOT EXISTS schools (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    schoolName VARCHAR(255) NOT NULL,
+    schoolLogo VARCHAR(500) NULL,
+    bannerImage VARCHAR(500) NULL,
+    category VARCHAR(100),
+    description TEXT,
+    images JSON,
+    ourVision TEXT,
+    ourMission TEXT,
+    address1 VARCHAR(255),
+    address2 VARCHAR(255),
+    mobileNumber VARCHAR(20),
+    whatsappNumber VARCHAR(20),
+    emailId VARCHAR(120),
+    youtubeUrl VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+
+    
+
+
 // Debug: Log number of rows and columns in users table
-    const [rows, fields] = await db.query("SELECT * FROM users");
+    const [rows, fields] = await db.query("SELECT * FROM schools");
   console.log("📋 Total number:", rows.length);
   console.log("📋 Columns:");
   fields.forEach((field) => {
