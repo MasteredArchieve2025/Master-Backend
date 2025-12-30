@@ -63,11 +63,29 @@ await db.query(`
 `);
 
 
+
+
+// 5️⃣ ADVERTISEMENTS TABLE
+await db.query(`
+  CREATE TABLE IF NOT EXISTS advertisements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    category VARCHAR(100) NOT NULL,
+    page1id VARCHAR(255),
+    page2id VARCHAR(255),
+    page3id VARCHAR(255),
+    imageUrl JSON,
+    youtubeLinks JSON,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+
+
     
 
 
 // Debug: Log number of rows and columns in users table
-    const [rows, fields] = await db.query("SELECT * FROM schools");
+    const [rows, fields] = await db.query("SELECT * FROM advertisements");
   console.log("📋 Total number:", rows.length);
   console.log("📋 Columns:");
   fields.forEach((field) => {

@@ -7,7 +7,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("././routes/Auth/auth.routes");
 const uploadRoutes = require("./routes/uploadRoutes/uploadRoutes");
 const schoolRoutes = require("./routes/School/schoolRoutes");
-
+const advertisementRoutes = require("./routes/Advertisements/advertisementsRoutes");
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -23,11 +23,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api", uploadRoutes);
 // Routes Schools
 app.use("/api/schools", schoolRoutes);
-
-
-
-
-
+// Routes Advertisements
+app.use("/api/advertisements", advertisementRoutes);
 
 // Health check
 app.get("/", (req, res) => {
