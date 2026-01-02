@@ -19,8 +19,10 @@ app.use(express.json());
 
 // Routes Auth
 app.use("/api/auth", authRoutes);
+
 // Routes Upload
-app.use("/api", uploadRoutes);
+app.use("/api/upload", uploadRoutes);
+
 // Routes Schools
 app.use("/api/schools", schoolRoutes);
 // Routes Advertisements
