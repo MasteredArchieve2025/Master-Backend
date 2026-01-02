@@ -6,16 +6,21 @@ const {
   getAdvertisements,
   updateAdvertisement,
   deleteAdvertisement,
-  getAdvertisementCategories
+  getAdvertisementCategories,
+  getAllAdvertisements
 } = require("../../controllers/Advertisements/advertisementsController");
+
 
 // ➕ Create
 router.post("/", createAdvertisement);
 
-// 📌 Get ALL DISTINCT categories  >>> MUST BE ABOVE /:category
+// ⭐ NEW — Get ALL ads (must be before :category)
+router.get("/all", getAllAdvertisements);
+
+// 📌 Get ALL DISTINCT categories
 router.get("/", getAdvertisementCategories);
 
-// 📄 Get ads for a category + optional pages
+// 📄 Get ads for a category + optional page ids
 router.get("/:category", getAdvertisements);
 
 // ✏ Update
@@ -23,5 +28,6 @@ router.put("/:id", updateAdvertisement);
 
 // ❌ Delete
 router.delete("/:id", deleteAdvertisement);
+
 
 module.exports = router;

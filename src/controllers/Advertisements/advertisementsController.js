@@ -198,4 +198,31 @@ exports.getAdvertisementCategories = async (req, res) => {
     res.status(500).json({ result: "Failed", message: err.message });
   }
 };
- 
+ //
+// 6️⃣ GET ALL ADVERTISEMENTS (NO FILTERS)
+//
+exports.getAllAdvertisements = async (req, res) => {
+  try {
+    const [rows] = await db.query(`SELECT * FROM advertisements`);
+
+    const resultData = rows.map(row => ({
+      id: row.id,
+      category: row.category,
+      page1id: row.page1id,
+      page2id: row.page2id,
+      page3id: row.page3id,
+      imageUrl: parseJson(row.imageUrl),
+      youtubeLinks: parseJson(row.youtubeLinks),
+    }));
+
+    res.json({
+      result: "Success",
+      resultData,
+      message: "All advertisements fetched",
+    });
+
+  } catch (err) {
+    console.error("Error in getAllAdvertisements:", err);
+    res.status(500).json({ result: "Failed", message: err.message });
+  }
+};
