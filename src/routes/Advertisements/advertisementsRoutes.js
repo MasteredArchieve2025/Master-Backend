@@ -12,7 +12,10 @@ const {
 // ➕ Create
 router.post("/", createAdvertisement);
 
-// 📄 Get (with smart fallback: category + optional page ids)
+// 📌 Get ALL DISTINCT categories  >>> MUST BE ABOVE /:category
+router.get("/", getAdvertisementCategories);
+
+// 📄 Get ads for a category + optional pages
 router.get("/:category", getAdvertisements);
 
 // ✏ Update
@@ -20,8 +23,5 @@ router.put("/:id", updateAdvertisement);
 
 // ❌ Delete
 router.delete("/:id", deleteAdvertisement);
-
-// 📌 Get distinct categories
-router.get("/", getAdvertisementCategories);
 
 module.exports = router;
