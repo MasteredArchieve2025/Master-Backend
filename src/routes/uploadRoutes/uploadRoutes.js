@@ -12,14 +12,14 @@ router.post("/upload", (req, res, next) => {
     return res.json({
       success: true,
       message: "File uploaded successfully",
-      fileUrl: req.file.location,   // <-- S3 URL
+      fileUrl: req.file.location, // <-- S3 URL
     });
   });
 });
 
 // ===== Multiple file upload =====
 router.post("/upload/multiple", (req, res, next) => {
-  upload.array("files", 5)(req, res, function (err) {
+  upload.array("file", 5)(req, res, function (err) {
     if (err) return next(err);
     if (!req.files || req.files.length === 0)
       return res.status(400).json({ message: "No files uploaded" });
