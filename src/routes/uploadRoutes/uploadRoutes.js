@@ -12,26 +12,31 @@ router.post("/upload", (req, res, next) => {
     return res.json({
       success: true,
       message: "File uploaded successfully",
-      fileUrl: req.file.location,   // <-- S3 URL
+      fileUrl: req.file.location, // <-- S3 URL
     });
   });
 });
 
-// ===== Multiple file upload =====
-router.post("/upload/multiple", (req, res, next) => {
-  upload.array("files", 5)(req, res, function (err) {
-    if (err) return next(err);
-    if (!req.files || req.files.length === 0)
-      return res.status(400).json({ message: "No files uploaded" });
+const uploadMultiple = async (files) => {
+  setUploading(true);
+  try {
+    const fd = new FormData();
 
-    const urls = req.files.map((file) => file.location);
+    for (let f of files) {
+      fd.append("files", f); // ✅ MUST MATCH backend
+    }
 
-    return res.json({
-      success: true,
-      message: "Files uploaded successfully",
-      files: urls,
+    const res = await axios.post(`${UPLOAD}/multiple`, fd, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
-  });
-});
+
+    return res.data.files; // ✅ backend key
+  } catch (err) {
+    console.log("UPLOAD ERROR ===>", err.response?.data || err.message);
+    throw err;
+  } finally {
+    setUploading(false);
+  }
+};
 
 module.exports = router;
