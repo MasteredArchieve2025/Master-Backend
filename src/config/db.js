@@ -81,11 +81,27 @@ await db.query(`
 
 
 
+// 6️⃣ COLLEGE CATEGORIES TABLE
+await db.query(`
+  CREATE TABLE IF NOT EXISTS college_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    categoryName VARCHAR(150) NOT NULL,
+    categoryImage VARCHAR(500) NOT NULL,
+    description TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+
+
+
+
+
     
 
 
 // Debug: Log number of rows and columns in users table
-    const [rows, fields] = await db.query("SELECT * FROM advertisements");
+    const [rows, fields] = await db.query("SELECT * FROM college_categories ");
   console.log("📋 Total number:", rows.length);
   console.log("📋 Columns:");
   fields.forEach((field) => {
