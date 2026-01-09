@@ -10,6 +10,7 @@ const uploadRoutes = require("./routes/uploadRoutes/uploadRoutes");
 const schoolRoutes = require("./routes/School/schoolRoutes");
 const advertisementRoutes = require("./routes/Advertisements/advertisementsRoutes");
 const collegeCategoryRoutes = require("./routes/collegeCategory/collegeCategoryroutes");
+
 const port = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app);
