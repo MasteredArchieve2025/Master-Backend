@@ -10,6 +10,7 @@ const uploadRoutes = require("./routes/uploadRoutes/uploadRoutes");
 const schoolRoutes = require("./routes/School/schoolRoutes");
 const advertisementRoutes = require("./routes/Advertisements/advertisementsRoutes");
 const collegeCategoryRoutes = require("./routes/collegeCategory/collegeCategoryRoutes");
+const collegeSubcategoryRoutes = require("./routes/collegeCategory/collegeSubcategoryRoutes");
 
 
 const port = process.env.PORT || 5000;
@@ -37,6 +38,7 @@ app.use("/api/advertisements", advertisementRoutes);
 
 // College Categories ✅
 app.use("/api/college-categories", collegeCategoryRoutes);
+app.use("/api/college-subcategories", collegeSubcategoryRoutes);
 
 // ================= HEALTH CHECK =================
 app.get("/", (req, res) => {

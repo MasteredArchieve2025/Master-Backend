@@ -92,6 +92,22 @@ await db.query(`
   )
 `);
 
+// 7️⃣ COLLEGE SUBCATEGORIES TABLE (Linked to college_categories)
+await db.query(`
+  CREATE TABLE IF NOT EXISTS college_subcategories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    categoryId INT NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    image VARCHAR(500) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (categoryId) REFERENCES college_categories(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+
+console.log("✅ College Subcategories table created / verified");
 
 
 
@@ -101,7 +117,7 @@ await db.query(`
 
 
 // Debug: Log number of rows and columns in users table
-    const [rows, fields] = await db.query("SELECT * FROM college_categories ");
+    const [rows, fields] = await db.query("SELECT * FROM college_subcategories ");
   console.log("📋 Total number:", rows.length);
   console.log("📋 Columns:");
   fields.forEach((field) => {
