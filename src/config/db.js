@@ -1,3 +1,4 @@
+// config/db.js
 const mysql = require("mysql2/promise");
 require("dotenv").config();
 
@@ -81,7 +82,20 @@ const connectDB = async () => {
       )
     `);
 
-    // 6️⃣ COLLEGE CATEGORIES TABLE
+    // 6️⃣ Advertisement TABLE
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS Advertisement (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        page_name VARCHAR(50) NOT NULL,
+        images JSON,
+        youtube_urls JSON,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY unique_page (page_name)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    // 7️⃣ COLLEGE CATEGORIES TABLE
     await db.query(`
       CREATE TABLE IF NOT EXISTS college_categories (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -92,7 +106,7 @@ const connectDB = async () => {
       )
     `);
 
-    // 7️⃣ COLLEGE SUBCATEGORIES TABLE
+    // 8️⃣ COLLEGE SUBCATEGORIES TABLE
     await db.query(`
       CREATE TABLE IF NOT EXISTS college_subcategories (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -107,13 +121,13 @@ const connectDB = async () => {
       )
     `);
 
-    // Debug: Log number of rows and columns in users table
-    const [rows, fields] = await db.query("SELECT * FROM schools ");
-  console.log("📋 Total number:", rows.length);
-  console.log("📋 Columns:");
-  fields.forEach((field) => {
-    console.log("-", field.name);
-  });
+    // Debug: Log number of rows and columns in Advertisement table
+    const [rows, fields] = await db.query("SELECT * FROM Advertisement");
+    console.log("📋 Advertisement table rows:", rows.length);
+    console.log("📋 Advertisement columns:");
+    fields.forEach((field) => {
+      console.log("-", field.name);
+    });
 
     console.log("✅ All tables created / verified");
 
