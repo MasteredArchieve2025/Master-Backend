@@ -7,11 +7,17 @@ const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/Auth/auth.routes");
 const uploadRoutes = require("./routes/uploadRoutes/uploadRoutes");
-const schoolRoutes = require("./routes/School/schoolRoutes");
-const advertisementRoutes = require("./routes/Advertisements/advertisementsRoutes");
+
+//colleges
 const collegeCategoryRoutes = require("./routes/collegeCategory/collegeCategoryRoutes");
 const collegeSubcategoryRoutes = require("./routes/collegeCategory/collegeSubcategoryRoutes");
 
+
+//schools 
+
+// Import routes
+const schoolsRoutes = require("./routes/School/schoolsRoutes");
+const tuitionsRoutes = require("./routes/School/tuitionsRoutes");
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -30,11 +36,12 @@ app.use("/api/auth", authRoutes);
 // Upload
 app.use("/api", uploadRoutes);
 
-// Schools
-app.use("/api/schools", schoolRoutes);
+// Schools ✅
+app.use("/api/schools", schoolsRoutes);
+// Tuitions ✅
+app.use("/api/tuitions", tuitionsRoutes);
 
-// Advertisements
-app.use("/api/advertisements", advertisementRoutes);
+
 
 // College Categories ✅
 app.use("/api/college-categories", collegeCategoryRoutes);

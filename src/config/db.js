@@ -9,8 +9,6 @@ const connectDB = async () => {
       port: process.env.DB_PORT || 3306,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-
-      // ✅ Fix for AWS RDS self-signed cert
       ssl: {
         rejectUnauthorized: false
       }
@@ -37,94 +35,87 @@ const connectDB = async () => {
       )
     `);
 
+    // 4️⃣ SCHOOLS TABLE
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS schools (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        schoolName VARCHAR(255) NOT NULL,
+        category JSON,
+        schoolLogo VARCHAR(500),
+        rating DECIMAL(3,2) DEFAULT 0.0,
+        result TEXT,
+        classes JSON,
+        classesOffered JSON,
+        teachingMode JSON,
+        location VARCHAR(500),
+        mapLink VARCHAR(1000),
+        about TEXT,
+        mobileNumber VARCHAR(15),
+        whatsappNumber VARCHAR(15),
+        gallery JSON,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
 
-// 4️⃣ SCHOOLS TABLE
+    // 5️⃣ TUITIONS TABLE
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS tuitions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        tuitionName VARCHAR(255) NOT NULL,
+        tuitionImage VARCHAR(500),
+        category JSON,
+        shortDescription TEXT,
+        rating DECIMAL(3,2) DEFAULT 0.0,
+        result TEXT,
+        location VARCHAR(500),
+        subjectsOffered JSON,
+        teachingMode JSON,
+        about TEXT,
+        mapLink VARCHAR(1000),
+        mobileNumber VARCHAR(15),
+        whatsappNumber VARCHAR(15),
+        gallery JSON,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
 
+    // 6️⃣ COLLEGE CATEGORIES TABLE
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS college_categories (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        categoryName VARCHAR(150) NOT NULL,
+        categoryImage VARCHAR(500) NOT NULL,
+        description TEXT,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
-await db.query(`
-  CREATE TABLE IF NOT EXISTS schools (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    schoolName VARCHAR(255) NOT NULL,
-    schoolLogo VARCHAR(500) NULL,
-    bannerImage VARCHAR(500) NULL,
-    category VARCHAR(100),
-    description TEXT,
-    images JSON,
-    ourVision TEXT,
-    ourMission TEXT,
-    address1 VARCHAR(255),
-    address2 VARCHAR(255),
-    mobileNumber VARCHAR(20),
-    whatsappNumber VARCHAR(20),
-    emailId VARCHAR(120),
-    youtubeUrl VARCHAR(255),
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  )
-`);
+    // 7️⃣ COLLEGE SUBCATEGORIES TABLE
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS college_subcategories (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        categoryId INT NOT NULL,
+        name VARCHAR(150) NOT NULL,
+        description TEXT,
+        image VARCHAR(500) NOT NULL,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (categoryId) REFERENCES college_categories(id)
+          ON DELETE CASCADE
+          ON UPDATE CASCADE
+      )
+    `);
 
-
-
-
-// 5️⃣ ADVERTISEMENTS TABLE
-await db.query(`
-  CREATE TABLE IF NOT EXISTS advertisements (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    category VARCHAR(100) NOT NULL,
-    page1id VARCHAR(255),
-    page2id VARCHAR(255),
-    page3id VARCHAR(255),
-    imageUrl JSON,
-    youtubeLinks JSON,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  )
-`);
-
-
-
-// 6️⃣ COLLEGE CATEGORIES TABLE
-await db.query(`
-  CREATE TABLE IF NOT EXISTS college_categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    categoryName VARCHAR(150) NOT NULL,
-    categoryImage VARCHAR(500) NOT NULL,
-    description TEXT,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  )
-`);
-
-// 7️⃣ COLLEGE SUBCATEGORIES TABLE (Linked to college_categories)
-await db.query(`
-  CREATE TABLE IF NOT EXISTS college_subcategories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    categoryId INT NOT NULL,
-    name VARCHAR(150) NOT NULL,
-    description TEXT,
-    image VARCHAR(500) NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (categoryId) REFERENCES college_categories(id)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE
-  )
-`);
-
-console.log("✅ College Subcategories table created / verified");
-
-
-
-
-
-    
-
-
-// Debug: Log number of rows and columns in users table
-    const [rows, fields] = await db.query("SELECT * FROM college_subcategories ");
+    // Debug: Log number of rows and columns in users table
+    const [rows, fields] = await db.query("SELECT * FROM schools ");
   console.log("📋 Total number:", rows.length);
   console.log("📋 Columns:");
   fields.forEach((field) => {
     console.log("-", field.name);
   });
 
-    console.log("✅ Users table created / verified");
+    console.log("✅ All tables created / verified");
 
     return db;
   } catch (error) {
