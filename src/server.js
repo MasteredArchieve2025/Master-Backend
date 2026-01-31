@@ -1,4 +1,4 @@
-// server.js or app.js
+// server.js
 require("dotenv").config();
 const express = require("express");
 const http = require("http");
@@ -6,27 +6,51 @@ const cors = require("cors");
 
 const connectDB = require("./config/db");
 
+// ================= ROUTES =================
+
+// Auth
 const authRoutes = require("./routes/Auth/auth.routes");
+
+// Upload
 const uploadRoutes = require("./routes/uploadRoutes/uploadRoutes");
 
-// colleges
+// Colleges
 const collegeCategoryRoutes = require("./routes/collegeCategory/collegeCategoryRoutes");
 const collegeSubcategoryRoutes = require("./routes/collegeCategory/collegeSubcategoryRoutes");
 
-// schools 
+// Schools
 const schoolsRoutes = require("./routes/School/schoolsRoutes");
 const tuitionsRoutes = require("./routes/School/tuitionsRoutes");
 
-// advertisements
+// Advertisements
 const advertisementRoutes = require("./routes/Advertisement/advertisementRoutes");
 
+// IQ
+const iqRoutes = require("./routes/iq/iqRoutes");
+
+// ================= APP INIT =================
 const port = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app);
 
 // ================= MIDDLEWARE =================
+
+// CORS
 app.use(cors());
-app.use(express.json({ limit: "20mb" }));
+
+// ✅ SAFE JSON PARSER (FIXED)
+app.use(
+  express.json({
+    limit: "20mb",
+    strict: true,
+    type: (req) => {
+      // Only parse JSON for these methods
+      return ["POST", "PUT", "PATCH"].includes(req.method);
+    },
+  })
+);
+
+// URL Encoded
 app.use(express.urlencoded({ extended: true }));
 
 // ================= ROUTES =================
@@ -37,47 +61,34 @@ app.use("/api/auth", authRoutes);
 // Upload
 app.use("/api", uploadRoutes);
 
-// Schools ✅
+// Schools
 app.use("/api/schools", schoolsRoutes);
-// Tuitions ✅
 app.use("/api/tuitions", tuitionsRoutes);
 
-// Advertisements ✅
+// Advertisements
 app.use("/api/advertisements", advertisementRoutes);
 
-// College Categories ✅
+// IQ
+app.use("/api/iq", iqRoutes);
+
+// College Categories
 app.use("/api/college-categories", collegeCategoryRoutes);
 app.use("/api/college-subcategories", collegeSubcategoryRoutes);
 
 // ================= HEALTH CHECK =================
 app.get("/", (req, res) => {
-  res.send("🎓 Education Auth API running");
+  res.send("🎓 Education API running successfully");
 });
 
-// Test Advertisement endpoint (add this for debugging)
-app.get("/api/test-advertisement", async (req, res) => {
-  try {
-    if (!global.db) {
-      return res.status(500).json({ 
-        success: false, 
-        message: "global.db is not defined" 
-      });
-    }
-    
-    const [result] = await global.db.query("SELECT COUNT(*) as count FROM Advertisement");
-    
-    res.json({
-      success: true,
-      message: "Advertisement system is working",
-      table_count: result[0].count,
-      global_db_defined: !!global.db
-    });
-  } catch (error) {
-    res.status(500).json({
+// ================= JSON ERROR HANDLER =================
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+    return res.status(400).json({
       success: false,
-      message: error.message
+      message: "Invalid JSON payload",
     });
   }
+  next(err);
 });
 
 // ================= START SERVER =================
@@ -87,10 +98,9 @@ app.get("/api/test-advertisement", async (req, res) => {
     console.log("🌍 Global DB initialized");
 
     server.listen(port, () => {
-      console.log(`🚀 Server running at port ${port}`);
-      console.log(`📢 Advertisement API: http://localhost:${port}/api/advertisements`);
-      console.log(`🔗 Test endpoint: http://localhost:${port}/api/advertisements/test`);
-      console.log(`🔗 Debug endpoint: http://localhost:${port}/api/test-advertisement`);
+      console.log(`🚀 Server running at http://localhost:${port}`);
+      console.log(`🧠 IQ API: http://localhost:${port}/api/iq`);
+      console.log(`📢 Ads API: http://localhost:${port}/api/advertisements`);
     });
   } catch (err) {
     console.error("❌ Failed to start server:", err);
