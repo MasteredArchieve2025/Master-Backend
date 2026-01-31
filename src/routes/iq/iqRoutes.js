@@ -17,10 +17,19 @@ const {
   updateTest,
   deleteTest,
   getAllResults,
+  getAllTestsSimple,
+  
+  // New admin management functions
+  getAllTestsAdmin,
+  getTestDetailsAdmin,
+  updateTestStatus,
+  getTestQuestions,
+  updateQuestion,
+  deleteQuestion,
+  getTestStatistics,
   
   // Debug functions
-  debugIQ,
-  getAllTestsSimple
+  debugIQ
 } = require("../../controllers/iq/iqController");
 
 const router = express.Router();
@@ -30,7 +39,7 @@ const router = express.Router();
 // Get all available IQ tests
 router.get("/tests", getAllTests);
 
-// Get simple tests list
+// Get simple tests list (for dropdowns)
 router.get("/tests/simple", getAllTestsSimple);
 
 // Get specific test details
@@ -56,20 +65,23 @@ router.get("/users/:userId/history", getUserTestHistory);
 
 // ================== ADMIN ROUTES ==================
 
-// Create new IQ test
-router.post("/admin/tests", createTest);
+// Test Management
+router.get("/admin/tests", getAllTestsAdmin); // Get all tests with pagination
+router.post("/admin/tests", createTest); // Create new test
+router.get("/admin/tests/:testId", getTestDetailsAdmin); // Get test details with questions
+router.put("/admin/tests/:id", updateTest); // Update test
+router.put("/admin/tests/:testId/status", updateTestStatus); // Activate/deactivate test
+router.delete("/admin/tests/:id", deleteTest); // Delete test
 
-// Add questions to test
-router.post("/admin/tests/:testId/questions", addQuestionsToTest);
+// Question Management
+router.post("/admin/tests/:testId/questions", addQuestionsToTest); // Add questions
+router.get("/admin/tests/:testId/questions", getTestQuestions); // Get all questions for a test
+router.put("/admin/questions/:questionId", updateQuestion); // Update specific question
+router.delete("/admin/questions/:questionId", deleteQuestion); // Delete specific question
 
-// Update test
-router.put("/admin/tests/:id", updateTest);
-
-// Delete test
-router.delete("/admin/tests/:id", deleteTest);
-
-// Get all results (admin view)
-router.get("/admin/results", getAllResults);
+// Results & Analytics
+router.get("/admin/results", getAllResults); // Get all results
+router.get("/admin/tests/:testId/stats", getTestStatistics); // Get test statistics
 
 // ================== DEBUG ROUTES ==================
 
