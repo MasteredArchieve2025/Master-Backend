@@ -21,6 +21,7 @@ const collegeSubcategoryRoutes = require("./routes/collegeCategory/collegeSubcat
 // Schools
 const schoolsRoutes = require("./routes/School/schoolsRoutes");
 const tuitionsRoutes = require("./routes/School/tuitionsRoutes");
+const reviewRoutes = require("./routes/School/reviewRoutes");
 
 // Advertisements
 const advertisementRoutes = require("./routes/Advertisement/advertisementRoutes");
@@ -62,6 +63,7 @@ app.use("/api", uploadRoutes);
 // Schools
 app.use("/api/schools", schoolsRoutes);
 app.use("/api/tuitions", tuitionsRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 // Advertisements
 app.use("/api/advertisements", advertisementRoutes);

@@ -82,7 +82,31 @@ const connectDB = async () => {
       )
     `);
 
-    // 6️⃣ Advertisement TABLE
+    // 6️⃣ REVIEWS TABLE (Schools & Tuitions – Public Reviews)
+await db.query(`
+  CREATE TABLE IF NOT EXISTS reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    userId INT NOT NULL,
+    entityType ENUM('school', 'tuition') NOT NULL,
+    entityId INT NOT NULL,
+
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    review TEXT NOT NULL,
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    UNIQUE KEY unique_review (userId, entityType, entityId),
+
+    FOREIGN KEY (userId) REFERENCES users(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+
+
+    // 7  Advertisement TABLE
     await db.query(`
       CREATE TABLE IF NOT EXISTS Advertisement (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -212,7 +236,7 @@ await db.query(`
     `);
 
     // Debug: Log number of rows and columns in Advertisement table
-    const [rows, fields] = await db.query("SELECT * FROM iq_results");
+    const [rows, fields] = await db.query("SELECT * FROM reviews");
     console.log("📋 Advertisement table rows:", rows.length);
     console.log("📋 Advertisement columns:");
     fields.forEach((field) => {
