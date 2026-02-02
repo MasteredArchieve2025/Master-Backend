@@ -38,20 +38,18 @@ const server = http.createServer(app);
 // CORS
 app.use(cors());
 
-// ✅ SAFE JSON PARSER (FIXED)
-app.use(
-  express.json({
-    limit: "20mb",
-    strict: true,
-    type: (req) => {
-      // Only parse JSON for these methods
-      return ["POST", "PUT", "PATCH"].includes(req.method);
-    },
-  })
-);
+// ✅ FIXED JSON HANDLER
+app.use((req, res, next) => {
+  if (req.headers["content-type"]?.includes("multipart/form-data")) {
+    return next();
+  }
+  express.json({ limit: "20mb" })(req, res, next);
+});
 
-// URL Encoded
+// URL encoded
 app.use(express.urlencoded({ extended: true }));
+
+
 
 // ================= ROUTES =================
 

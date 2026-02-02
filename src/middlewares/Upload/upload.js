@@ -6,13 +6,19 @@ const upload = multer({
   storage: multerS3({
     s3,
     bucket: "master-education-images",
-    // acl: "public-read",   // enable if you want open URLs
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
-      cb(null, `${Date.now()}-${file.originalname}`);
+      // 🔥 Dynamic folder based on request
+      // default folder: uploads
+      const folder = req.body.folder || "uploads";
+
+      const fileName = `${folder}/${Date.now()}-${file.originalname}`;
+      cb(null, fileName);
     },
   }),
-  limits: { fileSize: 10 * 1024 * 1024 },
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB
+  },
 });
 
 module.exports = upload;

@@ -3,21 +3,28 @@ const upload = require("../../middlewares/Upload/upload");
 
 const router = express.Router();
 
-router.post("/upload", (req, res, next) => {
-  upload.array("file", 10)(req, res, function (err) {
-    if (err) return next(err);
+router.post("/upload", upload.single("file"), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
+    }
 
-    if (!req.files || req.files.length === 0)
-      return res.status(400).json({ message: "No files uploaded" });
-
-    const urls = req.files.map(f => f.location);
-
-    return res.json({
+    return res.status(200).json({
       success: true,
-      message: "Uploaded successfully",
-      files: urls,   // ALWAYS ARRAY
+      message: "Image uploaded successfully",
+      url: req.file.location,
+      key: req.file.key,
     });
-  });
+  } catch (err) {
+    console.error("UPLOAD ERROR ❌", err);
+    res.status(500).json({
+      success: false,
+      message: "Upload failed",
+    });
+  }
 });
 
 module.exports = router;
