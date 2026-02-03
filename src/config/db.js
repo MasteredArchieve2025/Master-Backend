@@ -235,8 +235,44 @@ await db.query(`
       )
     `);
 
+
+    // 📰 BLOGS & NEWS TABLE
+await db.query(`
+  CREATE TABLE IF NOT EXISTS blogs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    content LONGTEXT,
+
+    type ENUM('NEWS', 'BLOG') NOT NULL,
+    category VARCHAR(100),
+
+    image VARCHAR(500),
+    mainImage VARCHAR(500),
+
+    readTime VARCHAR(50),
+
+    author VARCHAR(150),
+    authorRole VARCHAR(150),
+    authorBio TEXT,
+    authorImage VARCHAR(500),
+
+    publishStatus ENUM('DRAFT', 'PUBLISHED') DEFAULT 'DRAFT',
+    publishedAt TIMESTAMP NULL,
+
+    createdBy INT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    INDEX idx_type (type),
+    INDEX idx_status (publishStatus)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+`);
+
+
     // Debug: Log number of rows and columns in Advertisement table
-    const [rows, fields] = await db.query("SELECT * FROM reviews");
+    const [rows, fields] = await db.query("SELECT * FROM blogs");
     console.log("📋 Advertisement table rows:", rows.length);
     console.log("📋 Advertisement columns:");
     fields.forEach((field) => {

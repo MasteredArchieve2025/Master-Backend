@@ -26,6 +26,10 @@ const reviewRoutes = require("./routes/School/reviewRoutes");
 // Advertisements
 const advertisementRoutes = require("./routes/Advertisement/advertisementRoutes");
 
+
+//Blogs
+const blogRoutes = require("./routes/Blogs/blogRoutes");
+
 // IQ
 const iqRoutes = require("./routes/iq/iqRoutes");
 
@@ -67,6 +71,9 @@ app.use("/api/reviews", reviewRoutes);
 
 // Advertisements
 app.use("/api/advertisements", advertisementRoutes);
+
+// Blogs
+app.use("/api/blogs", blogRoutes);
 
 // IQ
 app.use("/api/iq", iqRoutes);
