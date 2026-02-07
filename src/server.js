@@ -15,8 +15,8 @@ const authRoutes = require("./routes/Auth/auth.routes");
 const uploadRoutes = require("./routes/uploadRoutes/uploadRoutes");
 
 // Colleges
-const collegeCategoryRoutes = require("./routes/collegeCategory/collegeCategoryRoutes");
-const collegeSubcategoryRoutes = require("./routes/collegeCategory/collegeSubcategoryRoutes");
+
+
 
 // Schools
 const schoolsRoutes = require("./routes/School/schoolsRoutes");
@@ -30,8 +30,16 @@ const advertisementRoutes = require("./routes/Advertisement/advertisementRoutes"
 //Blogs
 const blogRoutes = require("./routes/Blogs/blogRoutes");
 
+//feedback
+const feedbackRoutes = require("./routes/Feedback/feedbackRoutes");
+
 // IQ
 const iqRoutes = require("./routes/iq/iqRoutes");
+
+//Colleges
+const collegeCategoryRoutes = require("./routes/College/collegeCategoryRoutes");
+const degreeRoutes = require("./routes/College/degreeRoutes");
+const collegeRoutes = require("./routes/College/collegeRoutes");
 
 // ================= APP INIT =================
 const port = process.env.PORT || 5000;
@@ -69,18 +77,24 @@ app.use("/api/schools", schoolsRoutes);
 app.use("/api/tuitions", tuitionsRoutes);
 app.use("/api/reviews", reviewRoutes);
 
+// Colleges
+app.use("/api/college-categories", collegeCategoryRoutes);
+app.use("/api/degrees", degreeRoutes);
+app.use("/api/colleges", collegeRoutes);
+
 // Advertisements
 app.use("/api/advertisements", advertisementRoutes);
 
 // Blogs
 app.use("/api/blogs", blogRoutes);
 
+// Feedback
+app.use("/api/feedback", feedbackRoutes);
+
 // IQ
 app.use("/api/iq", iqRoutes);
 
-// College Categories
-app.use("/api/college-categories", collegeCategoryRoutes);
-app.use("/api/college-subcategories", collegeSubcategoryRoutes);
+
 
 // ================= HEALTH CHECK =================
 app.get("/", (req, res) => {
@@ -98,9 +112,12 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
+
 // ================= START SERVER =================
 (async () => {
   try {
+
+    
     global.db = await connectDB();
     console.log("🌍 Global DB initialized");
 

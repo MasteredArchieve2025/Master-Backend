@@ -105,8 +105,7 @@ await db.query(`
   )
 `);
 
-
-    // 7  Advertisement TABLE
+// 7️⃣ ADVERTISEMENTS TABLE
     await db.query(`
       CREATE TABLE IF NOT EXISTS Advertisement (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -209,34 +208,9 @@ await db.query(`
   )
 `);
 
-    // 7️⃣ COLLEGE CATEGORIES TABLE
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS college_categories (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        categoryName VARCHAR(150) NOT NULL,
-        categoryImage VARCHAR(500) NOT NULL,
-        description TEXT,
-        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+   
 
-    // 8️⃣ COLLEGE SUBCATEGORIES TABLE
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS college_subcategories (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        categoryId INT NOT NULL,
-        name VARCHAR(150) NOT NULL,
-        description TEXT,
-        image VARCHAR(500) NOT NULL,
-        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (categoryId) REFERENCES college_categories(id)
-          ON DELETE CASCADE
-          ON UPDATE CASCADE
-      )
-    `);
-
-
-    // 📰 BLOGS & NEWS TABLE
+// 1️⃣2️⃣ BLOGS TABLE
 await db.query(`
   CREATE TABLE IF NOT EXISTS blogs (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -269,10 +243,117 @@ await db.query(`
     INDEX idx_status (publishStatus)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 `);
+// 1️⃣3️⃣ FEEDBACKS TABLE
+await db.query(`
+  CREATE TABLE IF NOT EXISTS feedbacks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    userId INT NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    email VARCHAR(150),
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment TEXT NOT NULL,
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+  )
+`);
+
+// ===============================
+// COLLEGE MODULE TABLES
+// ===============================
+
+// 1️⃣ COLLEGE CATEGORIES
+await db.query(`
+  CREATE TABLE IF NOT EXISTS college_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    categoryName VARCHAR(100) NOT NULL,
+    categoryImage VARCHAR(500),
+    description TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+// 2️⃣ DEGREES
+await db.query(`
+  CREATE TABLE IF NOT EXISTS degrees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    categoryId INT NOT NULL,
+    description TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_degree_category
+      FOREIGN KEY (categoryId)
+      REFERENCES college_categories(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+
+// 3️⃣ COLLEGES (FINAL)
+await db.query(`
+  CREATE TABLE IF NOT EXISTS colleges (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    name VARCHAR(255) NOT NULL,
+    shortName VARCHAR(150),
+
+    categoryId INT NOT NULL,
+    degreeId INT NOT NULL,
+
+    ownership ENUM('Government','Private') NOT NULL,
+    collegeStatus ENUM('Affiliated','Autonomous','Deemed') DEFAULT 'Affiliated',
+    affiliatedUniversity VARCHAR(150),
+
+    address VARCHAR(300),
+    city VARCHAR(100),
+    state VARCHAR(100),
+
+    aboutCollege TEXT,
+    academics TEXT,
+    departments JSON,
+    facilities JSON,
+
+    placementInfo TEXT,
+    admissionInfo TEXT,
+
+    phone VARCHAR(20),
+    whatsapp VARCHAR(20),
+    email VARCHAR(150),
+    website VARCHAR(200),
+    mapLink VARCHAR(500),
+
+    rating DECIMAL(3,1) DEFAULT 0,
+
+    logo VARCHAR(500),
+    collegeImage VARCHAR(500),
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_college_category
+      FOREIGN KEY (categoryId)
+      REFERENCES college_categories(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE,
+
+    CONSTRAINT fk_college_degree
+      FOREIGN KEY (degreeId)
+      REFERENCES degrees(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+
+
+
+
 
 
     // Debug: Log number of rows and columns in Advertisement table
-    const [rows, fields] = await db.query("SELECT * FROM blogs");
+    const [rows, fields] = await db.query("SELECT * FROM degrees ");
     console.log("📋 Advertisement table rows:", rows.length);
     console.log("📋 Advertisement columns:");
     fields.forEach((field) => {
