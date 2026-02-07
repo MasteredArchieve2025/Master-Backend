@@ -16,8 +16,6 @@ const uploadRoutes = require("./routes/uploadRoutes/uploadRoutes");
 
 // Colleges
 
-
-
 // Schools
 const schoolsRoutes = require("./routes/School/schoolsRoutes");
 const tuitionsRoutes = require("./routes/School/tuitionsRoutes");
@@ -25,7 +23,6 @@ const reviewRoutes = require("./routes/School/reviewRoutes");
 
 // Advertisements
 const advertisementRoutes = require("./routes/Advertisement/advertisementRoutes");
-
 
 //Blogs
 const blogRoutes = require("./routes/Blogs/blogRoutes");
@@ -40,6 +37,7 @@ const iqRoutes = require("./routes/iq/iqRoutes");
 const collegeCategoryRoutes = require("./routes/College/collegeCategoryRoutes");
 const degreeRoutes = require("./routes/College/degreeRoutes");
 const collegeRoutes = require("./routes/College/collegeRoutes");
+const collegeReviewRoutes = require("./routes/College/collegeReview.routes");
 
 // ================= APP INIT =================
 const port = process.env.PORT || 5000;
@@ -62,8 +60,6 @@ app.use((req, res, next) => {
 // URL encoded
 app.use(express.urlencoded({ extended: true }));
 
-
-
 // ================= ROUTES =================
 
 // Auth
@@ -81,6 +77,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/college-categories", collegeCategoryRoutes);
 app.use("/api/degrees", degreeRoutes);
 app.use("/api/colleges", collegeRoutes);
+app.use("/api/college-reviews", collegeReviewRoutes);
 
 // Advertisements
 app.use("/api/advertisements", advertisementRoutes);
@@ -93,8 +90,6 @@ app.use("/api/feedback", feedbackRoutes);
 
 // IQ
 app.use("/api/iq", iqRoutes);
-
-
 
 // ================= HEALTH CHECK =================
 app.get("/", (req, res) => {
@@ -112,12 +107,9 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-
 // ================= START SERVER =================
 (async () => {
   try {
-
-    
     global.db = await connectDB();
     console.log("🌍 Global DB initialized");
 

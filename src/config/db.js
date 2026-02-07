@@ -347,13 +347,38 @@ await db.query(`
   )
 `);
 
+// 4️⃣ COLLEGE REVIEWS
+await db.query(`
+  CREATE TABLE IF NOT EXISTS college_reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    collegeId INT NOT NULL,
+    userId INT NOT NULL,
+
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    review TEXT NOT NULL,
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ON UPDATE CURRENT_TIMESTAMP,
+
+    UNIQUE KEY unique_user_college (userId, collegeId),
+
+    CONSTRAINT fk_college_review
+      FOREIGN KEY (collegeId)
+      REFERENCES colleges(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+
 
 
 
 
 
     // Debug: Log number of rows and columns in Advertisement table
-    const [rows, fields] = await db.query("SELECT * FROM degrees ");
+    const [rows, fields] = await db.query("SELECT * FROM college_reviews ");
     console.log("📋 Advertisement table rows:", rows.length);
     console.log("📋 Advertisement columns:");
     fields.forEach((field) => {
