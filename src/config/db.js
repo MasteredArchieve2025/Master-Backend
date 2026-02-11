@@ -260,6 +260,112 @@ await db.query(`
   )
 `);
 
+
+
+//exam module tables
+
+
+// examCategoriesTable.js (or inside db setup file)
+
+await db.query(`
+  CREATE TABLE IF NOT EXISTS exam_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    shortDescription TEXT,
+    image VARCHAR(500),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+
+//exam types table
+await db.query(`
+  CREATE TABLE IF NOT EXISTS exam_types (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    categoryId INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    shortDescription TEXT,
+    image VARCHAR(500),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_exam_types_category
+      FOREIGN KEY (categoryId)
+      REFERENCES exam_categories(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+// exam details table
+await db.query(`
+  CREATE TABLE IF NOT EXISTS exam_details (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    typeId INT NOT NULL,
+
+    name VARCHAR(150) NOT NULL,
+    shortDescription TEXT,
+    board VARCHAR(150),
+    year VARCHAR(20),
+    duration VARCHAR(50),
+    totalMarks INT,
+
+    subjects JSON,
+    detailedSyllabus TEXT,
+    examPattern JSON,
+    questionTypes JSON,
+
+    importantDates TEXT,
+    image VARCHAR(500),
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_exam_details_type
+      FOREIGN KEY (typeId)
+      REFERENCES exam_types(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+
+//exam institution table
+await db.query(`
+  CREATE TABLE IF NOT EXISTS institutions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    typeId INT NOT NULL,
+
+    institutionName VARCHAR(255) NOT NULL,
+    institutionImage VARCHAR(500),
+
+    category JSON,
+    shortDescription TEXT,
+    rating DECIMAL(3,2) DEFAULT 0.0,
+    result TEXT,
+    location VARCHAR(500),
+
+    subjectsOffered JSON,
+    teachingMode JSON,
+    about TEXT,
+    mapLink VARCHAR(1000),
+
+    mobileNumber VARCHAR(15),
+    whatsappNumber VARCHAR(15),
+
+    gallery JSON,
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_institution_type
+      FOREIGN KEY (typeId)
+      REFERENCES exam_types(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+
+
+
+
+
 // ===============================
 // COLLEGE MODULE TABLES
 // ===============================
@@ -378,7 +484,7 @@ await db.query(`
 
 
     // Debug: Log number of rows and columns in Advertisement table
-    const [rows, fields] = await db.query("SELECT * FROM college_reviews ");
+    const [rows, fields] = await db.query("SELECT * FROM institutions  ");
     console.log("📋 Advertisement table rows:", rows.length);
     console.log("📋 Advertisement columns:");
     fields.forEach((field) => {

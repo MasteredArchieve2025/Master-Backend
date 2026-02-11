@@ -33,6 +33,13 @@ const feedbackRoutes = require("./routes/Feedback/feedbackRoutes");
 // IQ
 const iqRoutes = require("./routes/iq/iqRoutes");
 
+
+//exam
+const examCategoryRoutes = require("./routes/Exam/examCategoryRoutes");
+const examTypeRoutes = require("./routes/Exam/examTypeRoutes");
+const examDetailsRoutes = require("./routes/Exam/examDetailsRoutes");
+const institutionRoutes = require("./routes/Exam/institutionRoutes");
+
 //Colleges
 const collegeCategoryRoutes = require("./routes/College/collegeCategoryRoutes");
 const degreeRoutes = require("./routes/College/degreeRoutes");
@@ -84,6 +91,14 @@ app.use("/api/advertisements", advertisementRoutes);
 
 // Blogs
 app.use("/api/blogs", blogRoutes);
+
+
+// Exam
+app.use("/api/exam-categories", examCategoryRoutes);
+app.use("/api/exam-types", examTypeRoutes);
+app.use("/api/exam-details", examDetailsRoutes);
+app.use("/api/institutions", institutionRoutes);
+
 
 // Feedback
 app.use("/api/feedback", feedbackRoutes);
