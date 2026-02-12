@@ -363,6 +363,94 @@ await db.query(`
 `);
 
 
+//Extra Skill Module Tables
+
+await db.query(`
+  CREATE TABLE IF NOT EXISTS extra_skill_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    shortDescription TEXT,
+    image VARCHAR(500),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+// Extra Skill Types table
+await db.query(`
+  CREATE TABLE IF NOT EXISTS extra_skill_types (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    categoryId INT NOT NULL,
+
+    name VARCHAR(150) NOT NULL,
+    shortDescription TEXT,
+    image VARCHAR(500),
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_extra_skill_type_category
+      FOREIGN KEY (categoryId)
+      REFERENCES extra_skill_categories(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+
+//Extra skill institutions table
+
+await db.query(`
+  CREATE TABLE IF NOT EXISTS extra_skill_institutions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    typeId INT NOT NULL,
+
+    image VARCHAR(500),
+    name VARCHAR(200) NOT NULL,
+    shortDescription JSON,
+    area VARCHAR(150),
+    district VARCHAR(150),
+    state VARCHAR(150),
+    about TEXT,
+    weOffer JSON,
+    websiteUrl VARCHAR(500),
+    gallery JSON,
+    aboutOurTrainers TEXT,
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_extra_skill_institution_type
+      FOREIGN KEY (typeId)
+      REFERENCES extra_skill_types(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+
+
+//extra skill institution reviews table
+await db.query(`
+  CREATE TABLE IF NOT EXISTS extra_skill_institution_reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    institutionId INT NOT NULL,
+    userId INT NOT NULL,
+
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    review TEXT NOT NULL,
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_review_institution
+      FOREIGN KEY (institutionId)
+      REFERENCES extra_skill_institutions(id)
+      ON DELETE CASCADE
+  )
+`);
+
+
+
+
+
 
 
 
@@ -484,7 +572,7 @@ await db.query(`
 
 
     // Debug: Log number of rows and columns in Advertisement table
-    const [rows, fields] = await db.query("SELECT * FROM institutions  ");
+    const [rows, fields] = await db.query("SELECT * FROM extra_skill_institution_reviews  ");
     console.log("📋 Advertisement table rows:", rows.length);
     console.log("📋 Advertisement columns:");
     fields.forEach((field) => {

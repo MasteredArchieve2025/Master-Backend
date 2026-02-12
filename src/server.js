@@ -40,6 +40,13 @@ const examTypeRoutes = require("./routes/Exam/examTypeRoutes");
 const examDetailsRoutes = require("./routes/Exam/examDetailsRoutes");
 const institutionRoutes = require("./routes/Exam/institutionRoutes");
 
+
+//Extra Skill
+const extraSkillCategoryRoutes = require("./routes/ExtraSkill/extraSkillCategoryRoutes");
+const extraSkillTypeRoutes = require("./routes/ExtraSkill/extraSkillTypeRoutes");
+const extraSkillInstitutionRoutes = require("./routes/ExtraSkill/extraSkillInstitutionRoutes");
+const extraSkillReviewRoutes = require("./routes/ExtraSkill/extraSkillReviewRoutes");
+
 //Colleges
 const collegeCategoryRoutes = require("./routes/College/collegeCategoryRoutes");
 const degreeRoutes = require("./routes/College/degreeRoutes");
@@ -91,6 +98,13 @@ app.use("/api/advertisements", advertisementRoutes);
 
 // Blogs
 app.use("/api/blogs", blogRoutes);
+
+// Extra Skill
+app.use("/api/extra-skill-categories", extraSkillCategoryRoutes);
+app.use("/api/extra-skill-types", extraSkillTypeRoutes);
+app.use("/api/extra-skill-institutions", extraSkillInstitutionRoutes);
+app.use("/api/extra-skill-reviews", extraSkillReviewRoutes);
+
 
 
 // Exam
