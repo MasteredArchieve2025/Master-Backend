@@ -2,16 +2,17 @@
    EXTRA SKILL REVIEW CONTROLLER
    =============================== */
 
-// 🌍 GET REVIEWS BY INSTITUTION
+// 🌍 GET REVIEWS BY INSTITUTION (with usernames)
 exports.getEntityReviews = async (req, res) => {
   try {
     const { institutionId } = req.params;
 
     const [rows] = await global.db.query(
-      `SELECT * 
-       FROM extra_skill_institution_reviews
-       WHERE institutionId=?
-       ORDER BY id DESC`,
+      `SELECT r.*, u.username as userName 
+       FROM extra_skill_institution_reviews r
+       LEFT JOIN users u ON r.userId = u.id
+       WHERE r.institutionId = ?
+       ORDER BY r.id DESC`,
       [institutionId]
     );
 
@@ -77,7 +78,18 @@ exports.addReview = async (req, res) => {
       [institutionId, userId, rating, review]
     );
 
-    res.json({ message: "Review added successfully" });
+    // Optional: Return the newly created review with username
+    const [[newReview]] = await global.db.query(
+      `SELECT r.*, u.username as userName 
+       FROM extra_skill_institution_reviews r
+       LEFT JOIN users u ON r.userId = u.id
+       WHERE r.id = LAST_INSERT_ID()`
+    );
+
+    res.json({ 
+      message: "Review added successfully",
+      review: newReview 
+    });
 
   } catch (err) {
     console.error("ADD REVIEW ERROR:", err);
@@ -112,7 +124,19 @@ exports.updateReview = async (req, res) => {
       [rating, review, id]
     );
 
-    res.json({ message: "Review updated successfully" });
+    // Return updated review with username
+    const [[updatedReview]] = await global.db.query(
+      `SELECT r.*, u.username as userName 
+       FROM extra_skill_institution_reviews r
+       LEFT JOIN users u ON r.userId = u.id
+       WHERE r.id = ?`,
+      [id]
+    );
+
+    res.json({ 
+      message: "Review updated successfully",
+      review: updatedReview 
+    });
 
   } catch (err) {
     console.error("UPDATE REVIEW ERROR:", err);
