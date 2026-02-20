@@ -448,6 +448,74 @@ await db.query(`
 `);
 
 
+//course table
+await db.query(`
+CREATE TABLE IF NOT EXISTS course_categories (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  icon VARCHAR(100),
+  image VARCHAR(500),
+  description TEXT,
+  sortOrder INT DEFAULT 0,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)
+`);
+
+// course items table
+
+await db.query(`
+CREATE TABLE IF NOT EXISTS course_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  categoryId INT NOT NULL,
+  name VARCHAR(200) NOT NULL,
+  icon VARCHAR(100),
+  description TEXT,
+  sortOrder INT DEFAULT 0,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  CONSTRAINT fk_course_item_category
+    FOREIGN KEY (categoryId)
+    REFERENCES course_categories(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)
+`);
+
+// 3️ COURSE PROVIDERS (Course3 - institutions offering the course)
+await db.query(`
+  CREATE TABLE IF NOT EXISTS course_providers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    courseItemId INT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    logo VARCHAR(500),
+    shortDescription TEXT,
+    about TEXT,
+    location VARCHAR(500),
+    area VARCHAR(150),
+    district VARCHAR(150),
+    state VARCHAR(150),
+    mapLink VARCHAR(1000),
+    rating DECIMAL(3,2) DEFAULT 0.0,
+    teachingMode JSON,
+    coursesOffered JSON,
+    benefits TEXT,
+    mobileNumber VARCHAR(15),
+    whatsappNumber VARCHAR(15),
+    websiteUrl VARCHAR(500),
+    gallery JSON,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_provider_course_item
+      FOREIGN KEY (courseItemId)
+      REFERENCES course_items(id)
+      ON DELETE CASCADE ON UPDATE CASCADE
+  )
+`);
+
+
+
 
 
 
@@ -572,7 +640,7 @@ await db.query(`
 
 
     // Debug: Log number of rows and columns in Advertisement table
-    const [rows, fields] = await db.query("SELECT * FROM extra_skill_institution_reviews  ");
+    const [rows, fields] = await db.query("SELECT * FROM course_providers ");
     console.log("📋 Advertisement table rows:", rows.length);
     console.log("📋 Advertisement columns:");
     fields.forEach((field) => {
