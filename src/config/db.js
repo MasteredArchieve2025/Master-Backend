@@ -514,6 +514,32 @@ await db.query(`
   )
 `);
 
+// course provider reviews table
+await db.query(`
+CREATE TABLE IF NOT EXISTS course_provider_reviews (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+
+  courseProviderId INT NOT NULL,
+  userId INT NOT NULL,
+
+  rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  review TEXT NOT NULL,
+
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
+
+  UNIQUE KEY unique_user_provider (userId, courseProviderId),
+
+  CONSTRAINT fk_provider_review
+    FOREIGN KEY (courseProviderId)
+    REFERENCES course_providers(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)
+`);
+
+
 
 
 
@@ -640,7 +666,7 @@ await db.query(`
 
 
     // Debug: Log number of rows and columns in Advertisement table
-    const [rows, fields] = await db.query("SELECT * FROM course_providers ");
+    const [rows, fields] = await db.query("SELECT * FROM course_provider_reviews ");
     console.log("📋 Advertisement table rows:", rows.length);
     console.log("📋 Advertisement columns:");
     fields.forEach((field) => {

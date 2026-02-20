@@ -44,6 +44,7 @@ const institutionRoutes = require("./routes/Exam/institutionRoutes");
 const courseCategoryRoutes = require("./routes/Course/courseCategoryRoutes");
 const courseItemRoutes = require("./routes/Course/courseItemRoutes");
 const courseProviderRoutes = require("./routes/Course/courseProviderRoutes");
+const courseProviderReviewRoutes = require("./routes/Course/courseProviderReview");
 
 
 //Extra Skill
@@ -114,6 +115,7 @@ app.use("/api/extra-skill-reviews", extraSkillReviewRoutes);
 app.use("/api/course-categories", courseCategoryRoutes);
 app.use("/api/course-items", courseItemRoutes);
 app.use("/api/course-providers", courseProviderRoutes);
+app.use("/api/course-provider-reviews", courseProviderReviewRoutes);
 
 
 
