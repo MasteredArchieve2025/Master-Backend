@@ -1,13 +1,13 @@
 // ➕ CREATE COURSE ITEM
 exports.createCourseItem = async (req, res) => {
   try {
-    const { categoryId, name, icon, description, sortOrder } = req.body;
+    const { categoryId, name, image, description, sortOrder } = req.body;
 
     const [result] = await db.query(
       `INSERT INTO course_items
-       (categoryId, name, icon, description, sortOrder)
+       (categoryId, name, image, description, sortOrder)
        VALUES (?, ?, ?, ?, ?)`,
-      [categoryId, name, icon, description, sortOrder ?? 0]
+      [categoryId, name, image, description, sortOrder ?? 0]
     );
 
     res.status(201).json({
@@ -71,7 +71,10 @@ exports.getCourseItemById = async (req, res) => {
     );
 
     if (!rows.length) {
-      return res.status(404).json({ message: "Course item not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Course item not found"
+      });
     }
 
     res.json({ success: true, data: rows[0] });
@@ -86,13 +89,13 @@ exports.getCourseItemById = async (req, res) => {
 // ✏️ UPDATE COURSE ITEM
 exports.updateCourseItem = async (req, res) => {
   try {
-    const { categoryId, name, icon, description, sortOrder } = req.body;
+    const { categoryId, name, image, description, sortOrder } = req.body;
 
     await db.query(
       `UPDATE course_items
-       SET categoryId=?, name=?, icon=?, description=?, sortOrder=?
+       SET categoryId=?, name=?, image=?, description=?, sortOrder=?
        WHERE id=?`,
-      [categoryId, name, icon, description, sortOrder, req.params.id]
+      [categoryId, name, image, description, sortOrder ?? 0, req.params.id]
     );
 
     res.json({ success: true, message: "Course item updated" });
