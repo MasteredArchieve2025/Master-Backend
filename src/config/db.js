@@ -662,11 +662,70 @@ await db.query(`
 
 
 
+//job-career module tables
+
+// job categories table 
+
+await db.query(`
+  CREATE TABLE IF NOT EXISTS job_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    image VARCHAR(500),
+
+    sortOrder INT DEFAULT 0,
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ON UPDATE CURRENT_TIMESTAMP
+  )
+`);
+
+//job deatils table
+await db.query(`
+  CREATE TABLE IF NOT EXISTS job_details (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    jobCategoryId INT NOT NULL,
+
+    companyName VARCHAR(255) NOT NULL,
+    jobName VARCHAR(255) NOT NULL,
+
+    area VARCHAR(150),
+    district VARCHAR(150),
+    state VARCHAR(150),
+
+    tags JSON,
+
+    salaryRange VARCHAR(100),
+
+    jobDescription TEXT,
+    requirements TEXT,
+    experience VARCHAR(100),
+
+    applicationDeadline DATE,
+
+    mapLink VARCHAR(500),
+    applyLink VARCHAR(500),
+
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_job_category
+      FOREIGN KEY (jobCategoryId)
+      REFERENCES job_categories(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
+  )
+`);
+
 
 
 
     // Debug: Log number of rows and columns in Advertisement table
-    const [rows, fields] = await db.query("SELECT * FROM course_provider_reviews ");
+    const [rows, fields] = await db.query("SELECT * FROM job_details ");
     console.log("📋 Advertisement table rows:", rows.length);
     console.log("📋 Advertisement columns:");
     fields.forEach((field) => {

@@ -46,6 +46,10 @@ const courseItemRoutes = require("./routes/Course/courseItemRoutes");
 const courseProviderRoutes = require("./routes/Course/courseProviderRoutes");
 const courseProviderReviewRoutes = require("./routes/Course/courseProviderReview");
 
+//jobs
+const jobCategoryRoutes = require("./routes/Job/JobCategoryRoutes");
+const jobDetailsRoutes = require("./routes/Job/JobDeatilsRoutes");
+
 
 //Extra Skill
 const extraSkillCategoryRoutes = require("./routes/ExtraSkill/extraSkillCategoryRoutes");
@@ -116,6 +120,11 @@ app.use("/api/course-categories", courseCategoryRoutes);
 app.use("/api/course-items", courseItemRoutes);
 app.use("/api/course-providers", courseProviderRoutes);
 app.use("/api/course-provider-reviews", courseProviderReviewRoutes);
+
+
+//jobs 
+app.use("/api/job-categories", jobCategoryRoutes);
+app.use("/api/job-details", jobDetailsRoutes);
 
 
 
