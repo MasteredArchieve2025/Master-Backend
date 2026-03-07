@@ -14,6 +14,13 @@ router.post(
   resumeController.uploadResume
 );
 
+// GET - My Resume (User)
+router.get(
+  "/my-resume",
+  verifyToken,
+  resumeController.getMyResume
+);
+
 
 // PUT - Update Resume (User)
 router.put(

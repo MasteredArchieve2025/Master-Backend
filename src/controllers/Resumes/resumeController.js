@@ -32,6 +32,37 @@ const uploadResume = async (req, res) => {
 
 
 
+
+// GET - User Resume
+const getMyResume = async (req, res) => {
+  try {
+
+    const user_id = req.user.id;
+
+    const [[resume]] = await global.db.query(
+      `SELECT * FROM resumes WHERE user_id=?`,
+      [user_id]
+    );
+
+    if (!resume) {
+      return res.status(404).json({
+        message: "Resume not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      data: resume
+    });
+
+  } catch (error) {
+    console.error("GET MY RESUME ERROR:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
 // PUT - Update Resume
 const updateResume = async (req, res) => {
   try {
@@ -114,6 +145,7 @@ const deleteResume = async (req, res) => {
 
 module.exports = {
   uploadResume,
+  getMyResume,
   updateResume,
   getAllResumes,
   deleteResume
