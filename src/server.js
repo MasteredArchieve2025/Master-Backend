@@ -11,6 +11,10 @@ const connectDB = require("./config/db");
 // Auth
 const authRoutes = require("./routes/Auth/auth.routes");
 
+
+// Resume
+const resumeRoutes = require("./routes/Resumes/resumeRoutes");
+
 // Upload
 const uploadRoutes = require("./routes/uploadRoutes/uploadRoutes");
 
@@ -84,10 +88,20 @@ app.use((req, res, next) => {
 // URL encoded
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/uploads", express.static("uploads"));
+
 // ================= ROUTES =================
 
 // Auth
 app.use("/api/auth", authRoutes);
+
+
+// Resume
+app.use("/api/resumes", resumeRoutes);
+
+
+
+
 
 // Upload
 app.use("/api", uploadRoutes);

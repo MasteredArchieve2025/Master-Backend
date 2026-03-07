@@ -36,6 +36,21 @@ const connectDB = async () => {
       )
     `);
 
+
+     // RESUMES TABLE
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS resumes (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT UNIQUE NOT NULL,
+        resume VARCHAR(255) NOT NULL,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+        ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) 
+        ON DELETE CASCADE
+      )
+    `);
+
     // 4️⃣ SCHOOLS TABLE
     await db.query(`
       CREATE TABLE IF NOT EXISTS schools (
@@ -725,7 +740,7 @@ await db.query(`
 
 
     // Debug: Log number of rows and columns in Advertisement table
-    const [rows, fields] = await db.query("SELECT * FROM job_details ");
+    const [rows, fields] = await db.query("SELECT * FROM resumes ");
     console.log("📋 Advertisement table rows:", rows.length);
     console.log("📋 Advertisement columns:");
     fields.forEach((field) => {
